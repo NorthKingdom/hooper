@@ -223,6 +223,8 @@ export default {
     },
 
     initEvents () {
+      this.removeEvents();
+
       // get the element direction if not explicitly set
       if (this.defaults.rtl === null) {
         this.defaults.rtl = getComputedStyle(this.$el).direction === 'rtl';
@@ -245,6 +247,13 @@ export default {
         this.$el.addEventListener('wheel', this.onWheel, { passive: false });
       }
       window.addEventListener('resize', this.update);
+    },
+    removeEvents () {
+      this.$refs.track.removeEventListener('mousedown', this.onDragStart);
+      this.$refs.track.removeEventListener('touchstart', this.onDragStart);
+      this.$el.removeEventListener('keydown', this.onKeypress);
+      this.$el.removeEventListener('wheel', this.onWheel);
+      window.removeEventListener('resize', this.update);
     },
     initSync () {
       if (this.config.sync) {
@@ -308,6 +317,7 @@ export default {
         this.updateConfig();
       }
       this.updateWidth();
+      console.log(this.config)
       this.$emit('updated', {
         containerWidth: this.containerWidth,
         containerHeight: this.containerHeight,
@@ -378,8 +388,8 @@ export default {
         this.isTouch ? 'touchend' : 'mouseup',
         this.onDragEnd
       );
-      
-      e.preventDefault();
+
+      event.preventDefault();
     },
     onDrag (event) {
       if (this.isSliding) {
@@ -389,8 +399,8 @@ export default {
       this.endPosition.y = this.isTouch ? event.touches[0].clientY : event.clientY;
       this.delta.x = this.endPosition.x - this.startPosition.x;
       this.delta.y = this.endPosition.y - this.startPosition.y;
-      
-      e.preventDefault();
+
+      event.preventDefault();
     },
     onDragEnd () {
       const tolerance = this.config.shortDrag ? 0.5 : 0.15;
@@ -480,7 +490,7 @@ export default {
     }
   },
   beforeUpdate () {
-    const isForcUpdated = 
+    const isForcUpdated =
       this.config.infiniteScroll &&
       (
         !this.$slots['clone-before'] ||
@@ -510,6 +520,28 @@ export default {
     window.removeEventListener('resize', this.update);
     if (this.timer) {
       this.timer.stop();
+    }
+  },
+  watch: {
+    mouseDrag: function (value) {
+      this.initDefaults();
+      this.initEvents();
+    },
+    touchDrag: function (value) {
+      this.initDefaults();
+      this.initEvents();
+    },
+    wheelControl: function (value) {
+      this.initDefaults();
+      this.initEvents();
+    },
+    keysControl: function (value) {
+      this.initDefaults();
+      this.initEvents();
+    },
+    settings: function (value) {
+      this.initDefaults();
+      this.initEvents();
     }
   }
 }
