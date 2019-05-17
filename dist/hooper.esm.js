@@ -842,8 +842,7 @@ var script$1 = {
     },
     index: {
       type: Number,
-      default: 0,
-      required: true
+      default: 0
     }
   },
   computed: {
