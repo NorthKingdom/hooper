@@ -317,7 +317,6 @@ export default {
         this.updateConfig();
       }
       this.updateWidth();
-      console.log(this.config)
       this.$emit('updated', {
         containerWidth: this.containerWidth,
         containerHeight: this.containerHeight,
