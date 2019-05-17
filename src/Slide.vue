@@ -2,7 +2,7 @@
   <li
     class="hooper-slide"
     :class="{
-      'is-clone': isClone, 
+      'is-clone': isClone,
       'is-active': isActive,
       'is-prev': isPrev,
       'is-next': isNext,
@@ -26,8 +26,7 @@
       },
       index: {
         type: Number,
-        default: 0,
-        required: true
+        default: 0
       }
     },
     computed: {
