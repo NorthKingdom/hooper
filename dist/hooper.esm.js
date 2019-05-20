@@ -484,8 +484,7 @@ var script = {
       this.startPosition.x = this.isTouch ? event.touches[0].clientX : event.clientX;
       this.startPosition.y = this.isTouch ? event.touches[0].clientY : event.clientY;
       document.addEventListener(this.isTouch ? 'touchmove' : 'mousemove', this.onDrag);
-      document.addEventListener(this.isTouch ? 'touchend' : 'mouseup', this.onDragEnd);
-      event.preventDefault();
+      document.addEventListener(this.isTouch ? 'touchend' : 'mouseup', this.onDragEnd); // event.preventDefault();
     },
     onDrag: function onDrag(event) {
       if (this.isSliding) {
@@ -495,8 +494,7 @@ var script = {
       this.endPosition.x = this.isTouch ? event.touches[0].clientX : event.clientX;
       this.endPosition.y = this.isTouch ? event.touches[0].clientY : event.clientY;
       this.delta.x = this.endPosition.x - this.startPosition.x;
-      this.delta.y = this.endPosition.y - this.startPosition.y;
-      event.preventDefault();
+      this.delta.y = this.endPosition.y - this.startPosition.y; // event.preventDefault();
     },
     onDragEnd: function onDragEnd() {
       var tolerance = this.config.shortDrag ? 0.5 : 0.15;
