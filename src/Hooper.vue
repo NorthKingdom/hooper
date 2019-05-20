@@ -388,7 +388,7 @@ export default {
         this.onDragEnd
       );
 
-      event.preventDefault();
+      // event.preventDefault();
     },
     onDrag (event) {
       if (this.isSliding) {
@@ -399,7 +399,7 @@ export default {
       this.delta.x = this.endPosition.x - this.startPosition.x;
       this.delta.y = this.endPosition.y - this.startPosition.y;
 
-      event.preventDefault();
+      // event.preventDefault();
     },
     onDragEnd () {
       const tolerance = this.config.shortDrag ? 0.5 : 0.15;
