@@ -234,10 +234,10 @@ export default {
         this.initAutoPlay();
       }
       if (this.config.mouseDrag) {
-        this.$refs.track.addEventListener('mousedown', this.onDragStart);
+        this.$el.addEventListener('mousedown', this.onDragStart);
       }
       if (this.config.touchDrag) {
-        this.$refs.track.addEventListener('touchstart', this.onDragStart, { passive: true });
+        this.$el.addEventListener('touchstart', this.onDragStart);
       }
       if (this.config.keysControl) {
         this.$el.addEventListener('keydown', this.onKeypress);
@@ -249,8 +249,8 @@ export default {
       window.addEventListener('resize', this.update);
     },
     removeEvents () {
-      this.$refs.track.removeEventListener('mousedown', this.onDragStart);
-      this.$refs.track.removeEventListener('touchstart', this.onDragStart);
+      this.$el.removeEventListener('mousedown', this.onDragStart);
+      this.$el.removeEventListener('touchstart', this.onDragStart);
       this.$el.removeEventListener('keydown', this.onKeypress);
       this.$el.removeEventListener('wheel', this.onWheel);
       window.removeEventListener('resize', this.update);
@@ -373,6 +373,8 @@ export default {
         return;
       }
 
+      this.$emit('dragStart');
+
       this.startPosition = { x: 0, y: 0 };
       this.endPosition = { x: 0, y: 0 };
       this.isDragging = true;
@@ -388,7 +390,7 @@ export default {
         this.onDragEnd
       );
 
-      // event.preventDefault();
+      event.preventDefault();
     },
     onDrag (event) {
       if (this.isSliding) {
@@ -399,12 +401,12 @@ export default {
       this.delta.x = this.endPosition.x - this.startPosition.x;
       this.delta.y = this.endPosition.y - this.startPosition.y;
 
-      // event.preventDefault();
+      event.preventDefault();
     },
     onDragEnd () {
       const tolerance = this.config.shortDrag ? 0.5 : 0.15;
       this.isDragging = false;
-
+      this.$emit('dragEnd');
       if (this.config.vertical) {
         const draggedSlides = Math.round(Math.abs(this.delta.y / this.slideHeight) + tolerance);
         this.slideTo(this.currentSlide - Math.sign(this.delta.y) * draggedSlides);

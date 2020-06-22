@@ -1,6 +1,6 @@
 /**
   * Hopper 0.1.5
-  * (c) 2019
+  * (c) 2020
     * @license MIT
     */
 function _defineProperty(obj, key, value) {
@@ -320,13 +320,11 @@ var script = {
       }
 
       if (this.config.mouseDrag) {
-        this.$refs.track.addEventListener('mousedown', this.onDragStart);
+        this.$el.addEventListener('mousedown', this.onDragStart);
       }
 
       if (this.config.touchDrag) {
-        this.$refs.track.addEventListener('touchstart', this.onDragStart, {
-          passive: true
-        });
+        this.$el.addEventListener('touchstart', this.onDragStart);
       }
 
       if (this.config.keysControl) {
@@ -343,8 +341,8 @@ var script = {
       window.addEventListener('resize', this.update);
     },
     removeEvents: function removeEvents() {
-      this.$refs.track.removeEventListener('mousedown', this.onDragStart);
-      this.$refs.track.removeEventListener('touchstart', this.onDragStart);
+      this.$el.removeEventListener('mousedown', this.onDragStart);
+      this.$el.removeEventListener('touchstart', this.onDragStart);
       this.$el.removeEventListener('keydown', this.onKeypress);
       this.$el.removeEventListener('wheel', this.onWheel);
       window.removeEventListener('resize', this.update);
@@ -472,6 +470,7 @@ var script = {
         return;
       }
 
+      this.$emit('dragStart');
       this.startPosition = {
         x: 0,
         y: 0
@@ -484,7 +483,8 @@ var script = {
       this.startPosition.x = this.isTouch ? event.touches[0].clientX : event.clientX;
       this.startPosition.y = this.isTouch ? event.touches[0].clientY : event.clientY;
       document.addEventListener(this.isTouch ? 'touchmove' : 'mousemove', this.onDrag);
-      document.addEventListener(this.isTouch ? 'touchend' : 'mouseup', this.onDragEnd); // event.preventDefault();
+      document.addEventListener(this.isTouch ? 'touchend' : 'mouseup', this.onDragEnd);
+      event.preventDefault();
     },
     onDrag: function onDrag(event) {
       if (this.isSliding) {
@@ -494,11 +494,13 @@ var script = {
       this.endPosition.x = this.isTouch ? event.touches[0].clientX : event.clientX;
       this.endPosition.y = this.isTouch ? event.touches[0].clientY : event.clientY;
       this.delta.x = this.endPosition.x - this.startPosition.x;
-      this.delta.y = this.endPosition.y - this.startPosition.y; // event.preventDefault();
+      this.delta.y = this.endPosition.y - this.startPosition.y;
+      event.preventDefault();
     },
     onDragEnd: function onDragEnd() {
       var tolerance = this.config.shortDrag ? 0.5 : 0.15;
       this.isDragging = false;
+      this.$emit('dragEnd');
 
       if (this.config.vertical) {
         var draggedSlides = Math.round(Math.abs(this.delta.y / this.slideHeight) + tolerance);
